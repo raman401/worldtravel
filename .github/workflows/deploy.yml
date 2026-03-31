@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 concurrency:
   group: production-deploy
@@ -12,38 +13,71 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: SSH into Server & Deploy
+      - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT }}
+          timeout: 60s
+          command_timeout: 20m
+          debug: true
+          script_stop: true
           script: |
-            set -e
-            cd /var/www/worldtravel
+            set -euo pipefail
 
-            echo "Pulling latest code..."
-            git fetch origin main
+            APP_DIR="/var/www/worldtravel"
+            APP_NAME="worldtravel"
+            APP_PORT="3000"
+
+            echo "==> Connected to server: $(hostname)"
+            echo "==> Using app dir: ${APP_DIR}"
+
+            if [ ! -d "${APP_DIR}" ]; then
+              echo "ERROR: ${APP_DIR} does not exist"
+              exit 1
+            fi
+
+            cd "${APP_DIR}"
+
+            echo "==> Pulling latest code"
+            git fetch --all --prune
             git reset --hard origin/main
 
-            echo "Installing dependencies..."
+            echo "==> Installing dependencies"
             npm ci
 
-            echo "Running database migrations..."
+            echo "==> Running Prisma migrations"
             npx prisma migrate deploy
 
-            echo "Building Next.js app..."
+            echo "==> Optional seed (ENABLE_SEED=true)"
+            if [ "${ENABLE_SEED:-false}" = "true" ]; then
+              npm run db:seed
+            else
+              echo "Seed skipped"
+            fi
+
+            echo "==> Building Next.js app"
             npm run build
 
-            echo "Restarting PM2 app..."
-            pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
+            echo "==> Restarting PM2 app"
+            if pm2 describe "${APP_NAME}" >/dev/null 2>&1; then
+              pm2 restart "${APP_NAME}" --update-env
+            else
+              pm2 start npm --name "${APP_NAME}" -- start
+            fi
             pm2 save
 
-            echo "Checking health endpoint..."
-            sleep 5
-            curl -f http://localhost:3000/api/health >/dev/null
+            echo "==> Waiting for app to boot"
+            sleep 8
 
-            echo "Deployment completed successfully!"
+            echo "==> Health check"
+            curl -fsS "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null
+
+            echo "==> Deployment completed successfully"
+        env:
+          ENABLE_SEED: ${{ secrets.ENABLE_SEED }}
