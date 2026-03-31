@@ -2,8 +2,7 @@ name: Deploy to VPS
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -24,28 +23,43 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           timeout: 120s
-          command_timeout: 20m
+          command_timeout: 30m
           script_stop: true
+          debug: true
           script: |
             set -euo pipefail
+            set -x
 
             APP_DIR="/var/www/worldtravel"
             APP_NAME="worldtravel"
 
+            echo "==> Host: $(hostname)"
+            echo "==> App dir: ${APP_DIR}"
+
             cd "${APP_DIR}"
+            ls -la
 
             # Load nvm if present
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-            command -v npm >/dev/null 2>&1 || { echo "npm not found"; exit 1; }
+            command -v node
+            command -v npm
+            command -v pm2
 
+            test -f package.json
+
+            echo "==> Git sync"
             git fetch origin main
             git reset --hard origin/main
 
+            echo "==> Install"
             npm ci
+
+            echo "==> Build"
             npm run build
 
+            echo "==> PM2 restart"
             if pm2 describe "${APP_NAME}" >/dev/null 2>&1; then
               pm2 restart "${APP_NAME}" --update-env
             else
@@ -53,4 +67,7 @@ jobs:
             fi
             pm2 save
 
+            echo "==> Health (optional)"
             curl -f http://127.0.0.1:3000/api/health || true
+
+            echo "==> Done"
