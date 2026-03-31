@@ -70,10 +70,16 @@ Add these in **GitHub → Repository → Settings → Secrets and variables → 
 - `SSH_HOST` — VPS host/IP
 - `SSH_PORT` — SSH port (usually `22`)
 - `SSH_USER` — SSH username
-- `SSH_PASSWORD` — SSH user password
+- `SSH_PRIVATE_KEY` — private key for `SSH_USER` (PEM/OpenSSH format)
 
 ## Notes
 
 - This demo intentionally uses static content only.
 - No database, authentication, or Docker setup is included.
 - If `/api/health` does not exist, the health-check step will not fail deployment (`|| true`).
+
+
+### Troubleshooting: `Permission denied (publickey)` during `git fetch`
+
+- **Option 1 (SSH deploy key):** Add an SSH key for the server user and grant that public key read access to the repo (deploy key or user key).
+- **Option 2 (HTTPS remote + token):** Change the repo remote on the VPS to HTTPS and authenticate with a token (PAT or GitHub App token).
