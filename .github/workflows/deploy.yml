@@ -1,4 +1,4 @@
-name: Deploy via Git Pull
+name: Deploy to VPS
 
 on:
   push:
@@ -10,29 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH into Server & Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/worldtravel
+      - name: Deploy over SSH
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sshpass
 
-            echo "Pulling latest code..."
-            git pull origin main
+        sshpass -p "$SSH_PASSWORD" ssh -p "$SSH_PORT" -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
+          set -e
+          cd /var/www/worldtravel
+          git fetch origin main
+          git reset --hard origin/main
+          npm ci
+          npm run build
+          pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
 
-            echo "Installing dependencies..."
-            npm install
-
-            echo "Building Next.js app..."
-            npm run build
-
-            echo "Exporting static files..."
-            npm run export
-
-            echo "Restarting server (if needed)..."
-            # Uncomment if using PM2
-            # pm2 restart all
-
-            echo "Deployment completed!"
+          # Optional health check
+          curl -f http://127.0.0.1:3000/api/health || true
+        EOF
