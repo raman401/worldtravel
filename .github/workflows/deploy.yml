@@ -42,7 +42,10 @@ jobs:
             command -v npm >/dev/null 2>&1 || { echo "npm not found in PATH"; exit 1; }
             command -v pm2 >/dev/null 2>&1 || { echo "pm2 not found in PATH"; exit 1; }
 
-            git fetch origin main
+            node --version
+            npm --version
+
+            git fetch --prune origin main
             git reset --hard origin/main
 
             npm ci
