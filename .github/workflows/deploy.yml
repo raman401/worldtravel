@@ -4,31 +4,53 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: worldtravel-deploy
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Deploy over SSH
-      env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_PORT: ${{ secrets.SSH_PORT }}
-        SSH_USER: ${{ secrets.SSH_USER }}
-        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y sshpass
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          timeout: 120s
+          command_timeout: 20m
+          script_stop: true
+          script: |
+            set -euo pipefail
 
-        sshpass -p "$SSH_PASSWORD" ssh -p "$SSH_PORT" -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
-          set -e
-          cd /var/www/worldtravel
-          git fetch origin main
-          git reset --hard origin/main
-          npm ci
-          npm run build
-          pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
+            APP_DIR="/var/www/worldtravel"
+            APP_NAME="worldtravel"
 
-          # Optional health check
-          curl -f http://127.0.0.1:3000/api/health || true
-        EOF
+            cd "${APP_DIR}"
+
+            # Load nvm if present
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+            command -v npm >/dev/null 2>&1 || { echo "npm not found"; exit 1; }
+
+            git fetch origin main
+            git reset --hard origin/main
+
+            npm ci
+            npm run build
+
+            if pm2 describe "${APP_NAME}" >/dev/null 2>&1; then
+              pm2 restart "${APP_NAME}" --update-env
+            else
+              pm2 start npm --name "${APP_NAME}" -- start
+            fi
+            pm2 save
+
+            curl -f http://127.0.0.1:3000/api/health || true
