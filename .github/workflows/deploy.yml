@@ -9,6 +9,9 @@ concurrency:
   group: deploy-worldtravel-production
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Deploy Next.js via PM2
@@ -48,6 +51,6 @@ jobs:
             curl -f http://127.0.0.1:3000/api/health || true
 
 # Troubleshooting
-# - Permission denied (publickey) during `git fetch` on the server:
-#   1) Add a deploy key (or SSH key) with repo read access for the server user.
-#   2) OR switch the repo remote to HTTPS and use a PAT/token for pulls.
+# - "Permission denied (publickey)" during `git fetch` on the server:
+#   1) Add a deploy key (or SSH key) with read access for the server user/repo.
+#   2) OR switch the repo remote to HTTPS and use a token (PAT/GitHub App token).
