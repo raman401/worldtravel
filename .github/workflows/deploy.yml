@@ -1,0 +1,49 @@
+name: Deploy via Git Pull
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into Server & Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd /var/www/worldtravel
+
+            echo "Pulling latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "Installing dependencies..."
+            npm ci
+
+            echo "Running database migrations..."
+            npx prisma migrate deploy
+
+            echo "Building Next.js app..."
+            npm run build
+
+            echo "Restarting PM2 app..."
+            pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
+            pm2 save
+
+            echo "Checking health endpoint..."
+            sleep 5
+            curl -f http://localhost:3000/api/health >/dev/null
+
+            echo "Deployment completed successfully!"
