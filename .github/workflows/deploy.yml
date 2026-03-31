@@ -5,15 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
-concurrency:
-  group: worldtravel-deploy
-  cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
     steps:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -22,44 +16,34 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          timeout: 120s
-          command_timeout: 30m
           script_stop: true
-          debug: true
           script: |
             set -euo pipefail
-            set -x
 
             APP_DIR="/var/www/worldtravel"
             APP_NAME="worldtravel"
+            REPO_URL="https://github.com/devopsca85/worldtravel.git"
 
-            echo "==> Host: $(hostname)"
-            echo "==> App dir: ${APP_DIR}"
-
+            mkdir -p "${APP_DIR}"
             cd "${APP_DIR}"
-            ls -la
 
-            # Load nvm if present
+            # Clone once if repo is not initialized
+            if [ ! -d ".git" ]; then
+              git clone "${REPO_URL}" .
+            fi
+
+            # Load nvm only if present (never fail)
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              . "$NVM_DIR/nvm.sh"
+            fi
 
-            command -v node
-            command -v npm
-            command -v pm2
-
-            test -f package.json
-
-            echo "==> Git sync"
             git fetch origin main
             git reset --hard origin/main
 
-            echo "==> Install"
             npm ci
-
-            echo "==> Build"
             npm run build
 
-            echo "==> PM2 restart"
             if pm2 describe "${APP_NAME}" >/dev/null 2>&1; then
               pm2 restart "${APP_NAME}" --update-env
             else
@@ -67,7 +51,4 @@ jobs:
             fi
             pm2 save
 
-            echo "==> Health (optional)"
             curl -f http://127.0.0.1:3000/api/health || true
-
-            echo "==> Done"
