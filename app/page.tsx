@@ -15,8 +15,8 @@ export default function HomePage() {
           <article key={d.id} className="card">
             <div className="card__image-wrap">
               <Image
-                src={d.imagePath}
-                alt={`${d.name}, ${d.region}`}
+                src={d.image}
+                alt={`${d.name} in ${d.region}`}
                 fill
                 sizes="(min-width: 640px) 50vw, 100vw"
                 className="card__image"
