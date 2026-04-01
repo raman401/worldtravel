@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset="1" stop-color="#9a3412"/></linearGradient></defs>
+  <rect width="1200" height="800" fill="url(#g)"/>
+  <path d="M100 570 L330 430 L520 520 L760 360 L980 520 L1120 470 L1120 800 L100 800 Z" fill="#28140b" opacity="0.65"/>
+  <text x="600" y="420" text-anchor="middle" fill="#fff7ed" font-family="Segoe UI, sans-serif" font-size="90" font-weight="700">CAPE TOWN</text>
+</svg>

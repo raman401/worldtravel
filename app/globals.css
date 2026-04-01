@@ -1,12 +1,13 @@
 :root {
-  --bg: #0c1222;
-  --bg-elevated: #141c32;
-  --surface: #1a2540;
-  --text: #e8ecf4;
-  --text-muted: #94a3b8;
-  --accent: #38bdf8;
-  --accent-soft: rgba(56, 189, 248, 0.15);
-  --border: rgba(148, 163, 184, 0.2);
+  --bg: #140d0a;
+  --bg-elevated: #241812;
+  --surface: #2d1f17;
+  --text: #fff2e7;
+  --text-muted: #d4b7a0;
+  --accent: #fb923c;
+  --accent-strong: #f97316;
+  --accent-soft: rgba(251, 146, 60, 0.18);
+  --border: rgba(255, 190, 135, 0.24);
   --radius: 12px;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -25,7 +26,10 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-sans);
-  background: radial-gradient(ellipse 120% 80% at 50% -20%, #1e3a5f 0%, var(--bg) 55%);
+  background:
+    radial-gradient(circle at 20% -10%, rgba(249, 115, 22, 0.45), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(194, 65, 12, 0.35), transparent 40%),
+    linear-gradient(165deg, #1c120d 0%, var(--bg) 55%, #0f0907 100%);
   color: var(--text);
   line-height: 1.6;
 }
@@ -75,7 +79,7 @@ p.lead {
   gap: 1rem;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid var(--border);
-  background: rgba(12, 18, 34, 0.85);
+  background: rgba(20, 13, 10, 0.86);
   backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
@@ -120,15 +124,36 @@ p.lead {
 }
 
 .card {
-  background: var(--bg-elevated);
+  background: linear-gradient(180deg, rgba(56, 36, 25, 0.65) 0%, var(--bg-elevated) 100%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.25rem;
-  transition: border-color 0.2s;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
 .card:hover {
-  border-color: rgba(56, 189, 248, 0.35);
+  border-color: rgba(251, 146, 60, 0.6);
+  transform: translateY(-2px);
+}
+
+.card__image-wrap {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.card__image {
+  object-fit: cover;
+}
+
+.card__image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(20, 13, 10, 0.08) 25%, rgba(20, 13, 10, 0.78) 100%);
+}
+
+.card__body {
+  padding: 1.05rem 1.25rem 1.25rem;
 }
 
 .card__meta {
@@ -186,17 +211,19 @@ p.lead {
   border: none;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.2s, transform 0.15s;
+  transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
 }
 
 .btn--primary {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  color: white;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 95%);
+  color: #2a1408;
+  box-shadow: 0 8px 20px rgba(194, 65, 12, 0.35);
 }
 
 .btn--primary:hover {
   text-decoration: none;
-  filter: brightness(1.08);
+  filter: brightness(1.07);
+  transform: translateY(-1px);
 }
 
 .btn--ghost {
@@ -207,7 +234,7 @@ p.lead {
 
 .btn--ghost:hover {
   color: var(--text);
-  border-color: var(--text-muted);
+  border-color: var(--accent);
   text-decoration: none;
 }
 
@@ -257,22 +284,4 @@ textarea {
   gap: 0.75rem;
   flex-wrap: wrap;
   margin-top: 0.5rem;
-}
-
-.message {
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-}
-
-.message--ok {
-  background: rgba(34, 197, 94, 0.15);
-  border: 1px solid rgba(34, 197, 94, 0.4);
-  color: #86efac;
-}
-
-.message--hint {
-  background: var(--accent-soft);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  color: var(--text);
 }
