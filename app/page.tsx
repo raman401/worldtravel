@@ -1,74 +1,76 @@
-export default function HomePage() {
-  const destinations = [
-    {
-      name: 'Bali, Indonesia',
-      description:
-        'Tropical beaches, vibrant rice terraces, and relaxing wellness retreats for every kind of traveler.',
-      image:
-        'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-      name: 'Santorini, Greece',
-      description:
-        'Cliffside sunsets, iconic whitewashed villages, and unforgettable Aegean Sea views.',
-      image:
-        'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-      name: 'Kyoto, Japan',
-      description:
-        'Ancient temples, seasonal gardens, and authentic cultural experiences in a timeless city.',
-      image:
-        'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80',
-    },
-  ];
+const products = [
+  {
+    name: 'Apple',
+    price: '$2.99 / lb',
+    image:
+      'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    name: 'Banana',
+    price: '$1.49 / lb',
+    image:
+      'https://images.unsplash.com/photo-1603833665858-e61d17a86224?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    name: 'Mango',
+    price: '$3.49 each',
+    image:
+      'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    name: 'Orange',
+    price: '$2.29 / lb',
+    image:
+      'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=80',
+  },
+];
 
+export default function HomePage() {
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
-      <section className="relative overflow-hidden bg-gradient-to-br from-sky-600 via-indigo-600 to-violet-600 text-white">
-        <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-          <p className="mb-4 inline-flex rounded-full bg-white/20 px-4 py-1 text-sm font-medium backdrop-blur-sm">
-            World Travel Demo
-          </p>
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight md:text-6xl">
-            Discover your next unforgettable adventure.
-          </h1>
-          <p className="mt-6 max-w-2xl text-base text-sky-100 md:text-lg">
-            Explore top destinations, curated itineraries, and seamless travel planning — all in one place.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <button className="rounded-lg bg-white px-5 py-3 font-semibold text-indigo-700 transition hover:bg-slate-100">
-              Start Planning
-            </button>
-            <button className="rounded-lg border border-white/60 px-5 py-3 font-semibold text-white transition hover:bg-white/10">
-              View Destinations
-            </button>
-          </div>
+    <main className="min-h-screen bg-gradient-to-b from-lime-50 via-white to-orange-50 text-slate-900">
+      <header className="sticky top-0 z-10 border-b border-lime-100 bg-white/90 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+          <span className="text-lg font-extrabold tracking-tight text-lime-700 sm:text-xl">Fresh Fruits Market</span>
+          <nav className="flex gap-2 sm:gap-4">
+            <a href="#home" className="rounded-md px-2 py-1 text-sm font-medium text-slate-600 hover:bg-lime-100 hover:text-lime-800">Home</a>
+            <a href="#products" className="rounded-md px-2 py-1 text-sm font-medium text-slate-600 hover:bg-lime-100 hover:text-lime-800">Products</a>
+            <a href="#about" className="rounded-md px-2 py-1 text-sm font-medium text-slate-600 hover:bg-lime-100 hover:text-lime-800">About</a>
+            <a href="#contact" className="rounded-md px-2 py-1 text-sm font-medium text-slate-600 hover:bg-lime-100 hover:text-lime-800">Contact</a>
+          </nav>
         </div>
+      </header>
+
+      <section id="home" className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+        <div>
+          <p className="inline-block rounded-full bg-lime-100 px-4 py-1 text-sm font-semibold text-lime-800">Farm-fresh daily picks</p>
+          <h1 className="mt-4 text-4xl font-extrabold leading-tight sm:text-5xl md:text-6xl">
+            Fresh &amp; Organic Fruits Delivered to Your Doorstep
+          </h1>
+          <p className="mt-5 text-base text-slate-600 sm:text-lg">
+            Enjoy hand-selected fruits sourced directly from trusted growers and delivered to your home.
+          </p>
+        </div>
+        <img
+          src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1400&q=80"
+          alt="Colorful assortment of fresh fruits"
+          className="h-80 w-full rounded-3xl object-cover shadow-xl sm:h-96"
+        />
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold md:text-3xl">Popular Destinations</h2>
-          <span className="text-sm text-slate-500">Static demo cards</span>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          {destinations.map((destination) => (
+      <section id="products" className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+        <h2 className="text-3xl font-bold">Our Products</h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {products.map((product) => (
             <article
-              key={destination.name}
-              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              key={product.name}
+              className="overflow-hidden rounded-2xl border border-lime-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
-              <div
-                className="h-44 w-full bg-cover bg-center"
-                style={{ backgroundImage: `url(${destination.image})` }}
-                aria-hidden="true"
-              />
+              <img src={product.image} alt={product.name} className="h-44 w-full object-cover" />
               <div className="p-5">
-                <h3 className="text-lg font-semibold">{destination.name}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{destination.description}</p>
-                <button className="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">
-                  Explore
+                <h3 className="text-lg font-semibold">{product.name}</h3>
+                <p className="mt-3 text-base font-bold text-lime-700">{product.price}</p>
+                <button type="button" className="mt-4 w-full rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-600">
+                  Add to Cart
                 </button>
               </div>
             </article>
@@ -76,89 +78,37 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-white py-16 md:py-20">
-        <div className="mx-auto grid max-w-6xl gap-8 px-6 md:grid-cols-3">
-          {[
-            {
-              title: 'Trusted Expertise',
-              text: 'Our travel specialists help craft stress-free plans tailored to your style and budget.',
-            },
-            {
-              title: 'Best Value Deals',
-              text: 'Get competitive offers on flights, hotels, and guided experiences worldwide.',
-            },
-            {
-              title: '24/7 Support',
-              text: 'Wherever you go, our team is available around the clock for peace of mind.',
-            },
-          ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-slate-200 p-6 shadow-sm">
-              <h3 className="text-lg font-semibold">{item.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{item.text}</p>
-            </div>
-          ))}
+      <section id="about" className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="rounded-3xl border border-orange-100 bg-white p-8 shadow-sm sm:p-10">
+          <h2 className="text-3xl font-bold">About Us</h2>
+          <p className="mt-4 leading-7 text-slate-600">
+            At Fresh Fruits Market, we deliver premium-quality fruits with unmatched freshness and flavor.
+          </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-6 py-16 md:py-20">
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-          <h2 className="text-2xl font-bold md:text-3xl">Contact Us</h2>
-          <p className="mt-2 text-sm text-slate-600">
-            This is a static UI form for demo purposes (no backend connected).
-          </p>
-
-          <form className="mt-6 grid gap-4" onSubmit={(e) => e.preventDefault()}>
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm font-medium text-slate-700">
-                Name
-                <input
-                  type="text"
-                  placeholder="Jane Traveler"
-                  className="rounded-lg border border-slate-300 px-4 py-2.5 outline-none ring-indigo-500 transition focus:ring-2"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-medium text-slate-700">
-                Email
-                <input
-                  type="email"
-                  placeholder="jane@example.com"
-                  className="rounded-lg border border-slate-300 px-4 py-2.5 outline-none ring-indigo-500 transition focus:ring-2"
-                />
-              </label>
-            </div>
-
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
-              Destination of Interest
-              <input
-                type="text"
-                placeholder="e.g. Santorini"
-                className="rounded-lg border border-slate-300 px-4 py-2.5 outline-none ring-indigo-500 transition focus:ring-2"
-              />
-            </label>
-
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
-              Message
-              <textarea
-                rows={5}
-                placeholder="Tell us what kind of trip you're planning..."
-                className="resize-none rounded-lg border border-slate-300 px-4 py-2.5 outline-none ring-indigo-500 transition focus:ring-2"
-              />
-            </label>
-
-            <button
-              type="submit"
-              className="mt-2 inline-flex w-fit rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
-            >
-              Send Inquiry
+      <section id="contact" className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-20">
+        <div className="rounded-3xl border border-lime-100 bg-white p-8 shadow-sm sm:p-10">
+          <h2 className="text-3xl font-bold">Contact Us</h2>
+          <form className="mt-6 grid gap-4">
+            <input type="text" placeholder="Name" className="rounded-xl border border-slate-300 px-4 py-2.5" required />
+            <input type="email" placeholder="Email" className="rounded-xl border border-slate-300 px-4 py-2.5" required />
+            <textarea rows={5} placeholder="Message" className="resize-none rounded-xl border border-slate-300 px-4 py-2.5" required />
+            <button type="submit" className="inline-flex w-fit rounded-xl bg-lime-600 px-6 py-3 text-sm font-semibold text-white hover:bg-lime-700">
+              Send Message
             </button>
           </form>
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 bg-slate-100">
-        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-slate-600 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} World Travel. All rights reserved.</p>
-          <p>Demo site built with Next.js + Tailwind CSS.</p>
+      <footer className="border-t border-lime-100 bg-white">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <p>© {new Date().getFullYear()} Fresh Fruits Market. All rights reserved.</p>
+          <div className="flex gap-4">
+            <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+            <a href="https://x.com" target="_blank" rel="noreferrer">X</a>
+          </div>
         </div>
       </footer>
     </main>

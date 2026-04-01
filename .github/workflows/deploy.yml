@@ -25,14 +25,17 @@ jobs:
             set -euo pipefail
 
             export NVM_DIR="$HOME/.nvm"
-            if [ -s "$NVM_DIR/nvm.sh" ]; then . "$NVM_DIR/nvm.sh"; fi
-            nvm use 24 >/dev/null 2>&1 || true
+            if [ -f "$NVM_DIR/nvm.sh" ]; then
+              . "$NVM_DIR/nvm.sh"
+              nvm use 24 >/dev/null 2>&1 || true
+            fi
+
+            cd /var/www/worldtravel
 
             command -v node >/dev/null
             command -v npm >/dev/null
             command -v pm2 >/dev/null
 
-            cd /var/www/worldtravel
             git fetch origin main
             git reset --hard origin/main
 
@@ -40,4 +43,5 @@ jobs:
             npm run build
             pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
             pm2 save
-            curl -f http://127.0.0.1:3000/api/health || true
+
+            curl -f http://127.0.0.1:3000/api/health || curl -f http://127.0.0.1:3000/health || true
