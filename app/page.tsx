@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { destinations } from "@/lib/data";
 
@@ -12,17 +13,29 @@ export default function HomePage() {
       <div className="grid grid--2">
         {destinations.map((d) => (
           <article key={d.id} className="card">
-            <p className="card__meta">{d.region}</p>
-            <h2 className="card__title">{d.name}</h2>
-            <p className="card__tagline">{d.tagline}</p>
-            <span className="budget-pill">
-              ~${d.budgetPerDayUsd.min}–${d.budgetPerDayUsd.max} / day
-            </span>
-            <ul className="card__highlights">
-              {d.highlights.map((h) => (
-                <li key={h}>{h}</li>
-              ))}
-            </ul>
+            <div className="card__image-wrap">
+              <Image
+                src={d.imagePath}
+                alt={`${d.name}, ${d.region}`}
+                fill
+                sizes="(min-width: 640px) 50vw, 100vw"
+                className="card__image"
+              />
+              <div className="card__image-overlay" />
+            </div>
+            <div className="card__body">
+              <p className="card__meta">{d.region}</p>
+              <h2 className="card__title">{d.name}</h2>
+              <p className="card__tagline">{d.tagline}</p>
+              <span className="budget-pill">
+                ~${d.budgetPerDayUsd.min}–${d.budgetPerDayUsd.max} / day
+              </span>
+              <ul className="card__highlights">
+                {d.highlights.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            </div>
           </article>
         ))}
       </div>
