@@ -135,7 +135,6 @@ export default function HomePage() {
         <div className="rounded-3xl border border-lime-100 bg-white p-8 shadow-sm sm:p-10">
           <h2 className="text-3xl font-bold text-slate-900">Contact Us</h2>
           <p className="mt-3 text-sm text-slate-600">Have a question? Send us a message and we&apos;ll reply soon.</p>
-          <form className="mt-6 grid gap-4">
             <label className="grid gap-2 text-sm font-medium text-slate-700">
               Name
               <input
