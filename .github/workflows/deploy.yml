@@ -35,6 +35,7 @@ jobs:
             cd /var/www/worldtravel
             git fetch origin main
             git reset --hard origin/main
+
             npm ci
             npm run build
             pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
