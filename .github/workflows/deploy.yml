@@ -36,16 +36,6 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
-            if [ ! -f package.json ]; then
-              APP_PKG_PATH="$(find . -maxdepth 4 -type f -name package.json -not -path '*/node_modules/*' | head -n 1)"
-              if [ -z "$APP_PKG_PATH" ]; then
-                echo "ERROR: package.json not found in /var/www/worldtravel or its first 4 levels."
-                echo "Ensure your Next.js app (with package.json) is committed to main, or update deploy path."
-                exit 1
-              fi
-              cd "$(dirname "$APP_PKG_PATH")"
-            fi
-
             npm ci
             npm run build
             pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
