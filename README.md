@@ -1,4 +1,4 @@
-# World Travel Demo (Next.js + Tailwind CSS)
+## World Travel Demo (Next.js + Tailwind CSS)
 
 A simple 1-page world travel demo built with **Next.js (TypeScript + App Router)** and **Tailwind CSS**.
 
