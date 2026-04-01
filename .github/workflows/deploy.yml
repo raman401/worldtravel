@@ -44,4 +44,4 @@ jobs:
             pm2 restart worldtravel || pm2 start npm --name worldtravel -- start
             pm2 save
 
-            curl -f http://127.0.0.1:3000/api/health || curl -f http://127.0.0.1:3000/health || true
+            curl -f http://localhost:3000/api/health || curl -f http://localhost:3000/health || true
